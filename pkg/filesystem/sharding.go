@@ -34,7 +34,6 @@ func ShardFile(filePath string, shardSize int) ([]types.Shard, error) {
 			ID:      shardID,
 			Content: shardContent,
 		})
-		log.Printf("Shard %d: %v", shardID, shardContent)
 		shardID++
 	}
 

@@ -4,6 +4,7 @@ import (
 	"distributed-file-system/pkg/storage"
 	"distributed-file-system/pkg/types"
 	"errors"
+	"math/rand/v2"
 	"time"
 )
 
@@ -15,10 +16,13 @@ func ReplicateShard(shard types.Shard, nodes []*storage.Node, replicationFactor 
 		return errors.New("not enough nodes for replication")
 	}
 
+	// Shuffle nodes to distribute shards more evenly
+	shuffledNodes := shuffleNodes(nodes)
+
 	for i := 0; i < replicationFactor; i++ {
 		retries := 0
 		for retries < maxRetries {
-			err := nodes[i].StoreShard(shard)
+			err := shuffledNodes[i].StoreShard(shard)
 			if err != nil {
 				retries++
 				time.Sleep(retryInterval)
@@ -32,6 +36,15 @@ func ReplicateShard(shard types.Shard, nodes []*storage.Node, replicationFactor 
 	}
 
 	return nil
+}
+
+func shuffleNodes(nodes []*storage.Node) []*storage.Node {
+	shuffled := make([]*storage.Node, len(nodes))
+	copy(shuffled, nodes)
+	rand.Shuffle(len(shuffled), func(i, j int) {
+		shuffled[i], shuffled[j] = shuffled[j], shuffled[i]
+	})
+	return shuffled
 }
 
 func RetrieveReplicatedShard(shardID int, nodes []*storage.Node) (types.Shard, error) {

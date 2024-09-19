@@ -8,13 +8,14 @@ import (
 )
 
 type Node struct {
-	ID     string
-	Port   int
-	shards map[int][]byte
-	mu     sync.Mutex
-	active bool // Field to track if the node is active
+	ID     string         // Field to store the node's ID
+	Port   int            // Field to store the node's port
+	shards map[int][]byte // Field to store the node's shards
+	mu     sync.Mutex     // Mutex to protect the node's fields
+	active bool           // Field to track if the node is active
 }
 
+// NewNode function to create a new node
 func NewNode(id string, port int) *Node {
 	return &Node{
 		ID:     id,
@@ -24,6 +25,7 @@ func NewNode(id string, port int) *Node {
 	}
 }
 
+// Start method to start the node
 func (n *Node) Start() {
 	n.mu.Lock()
 	defer n.mu.Unlock()
@@ -32,13 +34,15 @@ func (n *Node) Start() {
 	fmt.Printf("Node %s started on port %d\n", n.ID, n.Port)
 }
 
+// a method tp track if the node is active
 func (n *Node) IsActive() bool {
 	n.mu.Lock()
 	defer n.mu.Unlock()
 
-	return n.active // Return the node's active status
+	return n.active
 }
 
+// a method to store a shards
 func (n *Node) StoreShard(shard types.Shard) error {
 	n.mu.Lock()
 	defer n.mu.Unlock()
@@ -48,6 +52,7 @@ func (n *Node) StoreShard(shard types.Shard) error {
 	return nil
 }
 
+// a method to fetch a shard from the id of the shard
 func (n *Node) FetchShard(shardID int) (types.Shard, error) {
 	n.mu.Lock()
 	defer n.mu.Unlock()

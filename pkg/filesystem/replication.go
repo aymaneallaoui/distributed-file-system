@@ -16,7 +16,6 @@ func ReplicateShard(shard types.Shard, nodes []*storage.Node, replicationFactor 
 		return errors.New("not enough nodes for replication")
 	}
 
-	// Shuffle nodes to distribute shards more evenly
 	shuffledNodes := shuffleNodes(nodes)
 
 	for i := 0; i < replicationFactor; i++ {

@@ -3,7 +3,6 @@ package filesystem
 import (
 	"distributed-file-system/pkg/types"
 	"io"
-	"log"
 	"os"
 )
 
@@ -41,6 +40,7 @@ func ShardFile(filePath string, shardSize int) ([]types.Shard, error) {
 }
 
 func CombineShards(shards []types.Shard, outputFile string) error {
+
 	output, err := os.Create(outputFile)
 	if err != nil {
 		return err
@@ -52,7 +52,7 @@ func CombineShards(shards []types.Shard, outputFile string) error {
 		if err != nil {
 			return err
 		}
-		log.Printf("Writing shard %d: %v", shard.ID, shard.Content)
 	}
+
 	return nil
 }

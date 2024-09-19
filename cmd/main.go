@@ -29,7 +29,7 @@ func main() {
 	fs := filesystem.NewFileSystem(nodes, replicationFactor)
 
 	// Step 3: Upload a file
-	filePath := "test_file.bin" // Path to the file to be uploaded
+	filePath := "test.txt" // Path to the file to be uploaded
 	err := fs.UploadFile(filePath)
 	if err != nil {
 		log.Fatalf("Failed to upload file: %v", err)
